@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:thaishorts@localhost:4000/webstore"
+}
+
+
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum Status{
+  CREATED
+  SHIPPED
+  COMPLETED
+  CANCELED
+  RETURNED
+}
+
+enum Size{
+  XXS
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+  XXXL
+}
+
+
+
+
+model User {
+  id  String   @id @default(uuid())
+  firstName String
+  lastName  String  
+  email     String    @unique
+  passwordHash  String
+  DOB DateTime?
+  address String[]
+  role Role @default(CUSTOMER)
+
+
+  orders Order[]
+  addresses Address[]
+}
+
+model Address {
+  addressLabel  String @default("New address")
+  firstName     String
+  lastName      String
+  addressLine1  String @id
+  addressLine2  String
+  zipCode       String
+  city          String
+  state         String
+  country       String
+  userId        String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+
+model Order{
+  id String @id @default(uuid())
+  orderItems OrderItem[]
+  totalPrice Decimal
+  status Status @default(CREATED)
+  userId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id]) 
+  @@index([userId])
+}
+
+model OrderItem{
+  id String @id @default(uuid())
+  productVariantId String
+  quantity Int @default(1)
+  orderId String 
+
+  order Order @relation(fields:[orderId], references:[id])
+  variant ProductVariant @relation(fields:[productVariantId], references:[sku])
+  @@index([orderId])
+  @@index([productVariantId])
+}
+
+
+
+
+model Product{
+  id String @id @default(uuid())
+  productName String @unique
+  color String
+  price Decimal @default(0)
+  image String 
+  description String?
+  isActive Boolean @default(false)
+  isOos Boolean @default(false)
+  createdAt DateTime @default(now())
+  
+  productVariant ProductVariant[]
+}
+
+model ProductVariant{
+  sku String @id @default(uuid())
+  size Size
+  stock Int
+
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  orderItems OrderItem[]
+
+  @@index([productId])
+}
