@@ -2,9 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser'
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { CORSRule$ } from '@aws-sdk/client-s3';
-
 
 
 async function bootstrap() {
@@ -21,9 +18,10 @@ async function bootstrap() {
 
   app.use(cookieParser())
   app.enableCors({
-    origin: "http://localhost:3001",
-    //methods: "GET,POST,PUT,HEAD,PATCH,DELETE", 
-    credentials: true
+    origin: [
+      "http://localhost:3000",
+      "https://chain.portfolio.samuelezucchini.com"
+    ]
   })
 
   await app.listen(process.env.PORT ?? 3000);
