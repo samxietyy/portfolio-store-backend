@@ -12,7 +12,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:thaishorts@localhost:4000/webstore"
+  url      = env("DATABASE_URL")
 }
 
 
