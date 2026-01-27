@@ -32,15 +32,18 @@ export class UsersService {
         const ordersFound = await this.prismaService.order.findMany({
             where:{
                 userId: userId,
-            },
-            include:{
+            }
+
+            // orderitems excluded
+            /* include:{
                 orderItems: {
                     include:{
                         variant: true
                     }
                 }
-            }
+            } */
         })
+        return ordersFound
     }
 
     updateUser(){

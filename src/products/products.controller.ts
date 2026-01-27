@@ -24,6 +24,9 @@ export class ProductsController {
         return await this.productsService.getSizes(id);
     }
 
+
+
+
     @Post()
     async createProduct(@Body() createProductDto: CreateProductDto){
         this.productsService.createProduct(createProductDto)

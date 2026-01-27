@@ -32,7 +32,8 @@ export class ProductsService {
         const sizes = await this.prisma.productVariant.findMany({
             select: {
                 size: true,
-                stock: true
+                stock: true,
+                sku: true
             },
             where:{
                 productId: id
@@ -41,7 +42,8 @@ export class ProductsService {
 
         return sizes.map(s => ({
             size: s.size,
-            inStock: s.stock > 0
+            inStock: s.stock > 0,
+            sku: s.sku
         }))
     }
 
