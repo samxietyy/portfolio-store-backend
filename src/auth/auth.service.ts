@@ -76,14 +76,14 @@ export class AuthService {
 
         res.cookie('auth_token', accessToken, {
             httpOnly: true,
-            secure: false,        //DEV: Set on true for production
-            sameSite: 'lax',
+            secure: true,        
+            sameSite: 'none',
             maxAge: 24 * 60 * 60 * 1000,
             path: '/',
         });
 
         //DEV
-        console.log("Login successful. Cookie sent.")
+        console.log("[] - Login successful. Cookie sent.")
 
         return {'accessToken': accessToken};
     }
