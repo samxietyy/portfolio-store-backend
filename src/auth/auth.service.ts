@@ -63,16 +63,12 @@ export class AuthService {
 
         const payload = {
             sub: user.id,    
-            role: user.role,  // authorization purposes
+            role: user.role, 
         };
         const accessToken = this.jwtService.sign(payload,{
             secret: process.env.JWT_SECRET,
             expiresIn: '1d'
-        });  // DEV only 1 token, exp. 1 day
-
-        /* const refreshToken = this.jwtService.sign(payload, {
-            expiresIn: '1d',    
-        }); */
+        });  
 
         res.cookie('auth_token', accessToken, {
             httpOnly: true,
@@ -82,40 +78,10 @@ export class AuthService {
             path: '/',
         });
 
-        //DEV
         console.log("[] - Login successful. Cookie sent.")
-
         return {'accessToken': accessToken};
     }
 
-
-    /* async refreshToken(req: Request){
-        const token = req.cookies?.refreshToken;
-        if(!token){
-            throw new UnauthorizedException('No token provided.');     
-        }
-
-        try{
-            const tokenPayload = this.jwtService.verify(token);
-            if(!tokenPayload){
-                throw new UnauthorizedException('Invalid token provided.');
-            }
-
-            const newAccessToken = this.jwtService.sign(
-                {
-                    sub: tokenPayload.sub,
-                    role: tokenPayload.role
-                },
-                {
-                    expiresIn: '15m'
-                })
-
-            return newAccessToken;
-        }catch{
-            throw new UnauthorizedException('Auth denied.')
-        }
-       
-    } */
 
 
 
